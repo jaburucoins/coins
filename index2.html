@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Page</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#e8c27a;
+    --gold-soft:#b8955a;
+    --red:#c8102e;
+    --red-deep:#5a0a14;
+    --ink:#0a0406;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Manrope',sans-serif;
+    color:#f4ece4;
+    background:var(--ink);
+    overflow-x:hidden;
+  }
+
+  /* ---------- CENÁRIO ---------- */
+  .scene{
+    position:fixed; inset:0; z-index:0; overflow:hidden;
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 38%, rgba(120,14,28,.55) 0%, rgba(60,8,16,.35) 40%, transparent 75%),
+      radial-gradient(ellipse 80% 60% at 50% 105%, rgba(150,16,32,.45) 0%, transparent 60%),
+      radial-gradient(ellipse 120% 90% at 50% 50%, #1a070b 0%, #0c0407 60%, #060203 100%);
+  }
+  /* arco de luz atrás do título */
+  .halo{
+    position:absolute; left:50%; top:-12vh; transform:translateX(-50%);
+    width:min(1100px,95vw); aspect-ratio:1; border-radius:50%;
+    border:1px solid rgba(200,40,60,.12);
+    box-shadow: inset 0 0 120px rgba(160,20,40,.25), 0 0 80px rgba(160,20,40,.08);
+  }
+  .halo::after{
+    content:""; position:absolute; inset:7%; border-radius:50%;
+    border:1px dashed rgba(220,60,80,.10);
+  }
+
+  /* roleta */
+  .roulette-wrap{
+    position:absolute; left:50%; bottom:-56vh;
+    width:min(1150px,140vw); aspect-ratio:1;
+    transform:translateX(-50%) perspective(1400px) rotateX(58deg);
+    filter: drop-shadow(0 0 60px rgba(200,20,40,.3)) brightness(.7);
+    opacity:.55;
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0%, #000 30%);
+            mask-image:linear-gradient(to bottom, transparent 0%, #000 30%);
+  }
+  .roulette-wrap svg{width:100%; height:100%; animation:spin 90s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* dados 3D */
+  .die{
+    position:absolute; transform-style:preserve-3d;
+    animation:float 7s ease-in-out infinite;
+  }
+  .die .cube{width:100%; height:100%; position:relative; transform-style:preserve-3d}
+  .face{
+    position:absolute; inset:0; border-radius:18%;
+    background: radial-gradient(circle at 30% 25%, #ff5a6a 0%, #d0142e 35%, #8a0618 80%, #5c0410 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,140,150,.25), inset -6px -8px 18px rgba(40,0,6,.55);
+    display:grid; grid-template:repeat(3,1fr)/repeat(3,1fr); padding:16%;
+  }
+  .pip{width:62%; height:62%; margin:auto; border-radius:50%;
+    background: radial-gradient(circle at 40% 35%, #fff 0%, #f1e6e6 55%, #bfa9ab 100%);
+    box-shadow: inset 1px 2px 3px rgba(0,0,0,.35);
+  }
+  @keyframes float{
+    0%,100%{translate:0 0}
+    50%{translate:0 -14px}
+  }
+
+  /* fichas */
+  .chip{position:absolute; animation:float 9s ease-in-out infinite}
+  .chip svg{width:100%; height:100%; filter:drop-shadow(0 10px 18px rgba(0,0,0,.6))}
+
+  /* naipes */
+  .suit{
+    position:absolute; font-size:clamp(28px,3.4vw,52px);
+    color:#3a0d14; opacity:.75; user-select:none;
+    text-shadow:0 0 18px rgba(120,10,25,.4);
+  }
+
+  .vignette{
+    position:absolute; inset:0; pointer-events:none;
+    background: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 45%, rgba(0,0,0,.75) 100%);
+  }
+  .grain{position:absolute; inset:0; opacity:.07; pointer-events:none; mix-blend-mode:overlay}
+
+  /* ---------- CONTEÚDO (substituir pelos seus textos) ---------- */
+  main{
+    position:relative; z-index:2; min-height:100vh;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:12vh 24px 22vh;
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:14px;
+    font-size:11px; letter-spacing:.32em; text-transform:uppercase; color:var(--gold); font-weight:800;
+  }
+  .eyebrow::before,.eyebrow::after{content:""; width:48px; height:1px; background:linear-gradient(90deg,transparent,var(--gold-soft))}
+  .eyebrow::after{transform:scaleX(-1)}
+  h1{
+    font-family:'Playfair Display',serif; font-weight:900;
+    font-size:clamp(40px,7vw,92px); line-height:1; margin:22px 0 18px;
+    color:#fbf3ea; text-shadow:0 4px 30px rgba(200,20,40,.35);
+  }
+  .lead{font-size:clamp(15px,1.3vw,18px); color:#d9cbc6; max-width:560px}
+  .slot{
+    margin-top:36px; width:min(780px,100%);
+    border:1px solid rgba(232,194,122,.35); border-radius:6px;
+    background:rgba(12,4,7,.72); backdrop-filter:blur(4px);
+    display:grid; grid-template-columns:repeat(4,1fr);
+    position:relative; text-align:left;
+  }
+  .slot::before,.slot::after{content:""; position:absolute; width:14px; height:14px; border:2px solid var(--gold-soft)}
+  .slot::before{top:-6px; left:-6px; border-right:0; border-bottom:0}
+  .slot::after{bottom:-6px; right:-6px; border-left:0; border-top:0}
+  .info{display:flex; align-items:center; gap:12px; padding:24px 18px}
+  .info + .info{border-left:1px solid rgba(232,194,122,.15)}
+  .info-icon{
+    flex:0 0 34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:15px;
+    background:radial-gradient(circle at 35% 30%, #5a0f1a, #2a070c);
+    box-shadow:0 0 0 1px rgba(200,40,60,.35), 0 0 14px rgba(200,20,40,.25);
+  }
+  .info-label{font-size:9.5px; letter-spacing:.14em; text-transform:uppercase; color:#b9a9a4; font-weight:700; margin-bottom:5px}
+  .info-text{font-size:14px; font-weight:800; color:#fbf3ea; line-height:1.3}
+  .info-note{font-size:11px; color:var(--gold); font-weight:700; margin-top:3px}
+  @media (max-width:760px){
+    .slot{grid-template-columns:1fr 1fr}
+    .info:nth-child(3){border-left:0}
+    .info:nth-child(n+3){border-top:1px solid rgba(232,194,122,.15)}
+    .info{padding:18px 14px}
+  }
+  .ctas{display:flex; gap:16px; margin-top:28px; flex-wrap:wrap; justify-content:center}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px; padding:17px 44px; border-radius:4px;
+    font-weight:800; font-size:13px; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; color:#fff;
+    transition:transform .2s, box-shadow .2s;
+  }
+  .btn:hover{transform:translateY(-2px)}
+  .btn-red{background:linear-gradient(180deg,#e2203c,#a50c22); box-shadow:0 8px 30px rgba(200,16,46,.45), inset 0 1px 0 rgba(255,255,255,.2)}
+  .btn-blue{background:linear-gradient(180deg,#2b9be0,#1673b8); box-shadow:0 8px 30px rgba(30,140,220,.35), inset 0 1px 0 rgba(255,255,255,.2)}
+
+  @media (max-width:760px){
+    .hide-mobile{display:none}
+    .roulette-wrap{bottom:-34vh}
+    .die{scale:.5; transform-origin:top right}
+    .die:nth-of-type(1){left:auto!important; right:-6%!important; top:-4%!important}
+    .die:nth-of-type(2){left:auto!important; right:4%!important; top:4%!important}
+    .chip-main{left:-5%!important; top:3%!important; opacity:.6}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important}
+  }
+</style>
+</head>
+<body>
+
+<div class="scene" aria-hidden="true">
+  <div class="halo"></div>
+  <div class="roulette-wrap"><svg id="roulette" viewBox="-500 -500 1000 1000"></svg></div>
+
+  <!-- naipes -->
+  <span class="suit" style="left:9%;top:14%;transform:rotate(-12deg)">♥</span>
+  <span class="suit" style="left:17%;top:80%;transform:rotate(8deg)">♣</span>
+  <span class="suit" style="right:10%;top:81%;transform:rotate(-6deg)">♠</span>
+  <span class="suit" style="right:21%;top:9%;transform:rotate(14deg);font-size:28px">♦</span>
+  <span class="suit hide-mobile" style="left:30%;top:46%;opacity:.35;font-size:22px">♦</span>
+
+  <!-- fichas -->
+  <div class="chip chip-main" style="left:4%;top:26%;width:clamp(56px,4.4vw,74px);animation-delay:-2s"><svg data-chip="100"></svg></div>
+  <div class="chip hide-mobile" style="right:5%;top:71%;width:clamp(50px,3.6vw,62px);animation-delay:-5s"><svg data-chip="VIP"></svg></div>
+  <div class="chip hide-mobile" style="left:26%;top:3%;width:110px;filter:blur(3px);opacity:.55;transform:rotate(-20deg)"><svg data-chip=""></svg></div>
+  <div class="chip hide-mobile" style="left:31%;top:12%;width:80px;filter:blur(2px);opacity:.45;animation-delay:-4s"><svg data-chip=""></svg></div>
+
+  <!-- dados -->
+  <div class="die" data-size="150" data-rx="-28" data-ry="38" data-rz="-12" style="left:56%;top:-3%;filter:blur(1.5px);opacity:.8"></div>
+  <div class="die" data-size="110" data-rx="-22" data-ry="-30" data-rz="18" style="left:64%;top:13%;filter:blur(.6px);opacity:.85;animation-delay:-2s"></div>
+  <div class="die hide-mobile" data-size="70" data-rx="-18" data-ry="28" data-rz="22" style="right:6%;top:7%;animation-delay:-3s"></div>
+  <div class="die hide-mobile" data-size="44" data-rx="-14" data-ry="-26" data-rz="-14" style="right:15%;top:19%;animation-delay:-5s"></div>
+
+  <svg class="grain" width="100%" height="100%"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+  <div class="vignette"></div>
+</div>
+
+<!-- ====== CONTEÚDO: troque pelos seus textos ====== -->
+<main>
+  <div class="eyebrow">OFERTA EXCLUSIVA PARA NOVOS JOGADORES</div>
+  <h1>BÔNUS DE 75%<br>NO 1º DEPÓSITO!</h1>
+  <p class="lead">Aproveite no seu primeiro depósito e sinta a emoção do jogo!</p>
+  <!-- BLOCO DE INFORMAÇÕES: 4 colunas. Em cada uma, troque o ícone, o título pequeno e o texto -->
+  <div class="slot">
+
+    <!-- Coluna 1 -->
+    <div class="info">
+      <div class="info-icon">🎟️</div>
+      <div>
+        <div class="info-label">CÓDIGO PROMOCIONAL</div>
+        <div class="info-text">jbcoin</div>
+      </div>
+    </div>
+
+    <!-- Coluna 2 -->
+    <div class="info">
+      <div class="info-icon">💰</div>
+      <div>
+        <div class="info-label">DEPÓSITO MÍNIMO</div>
+        <div class="info-text">R$25</div>
+        <div class="info-note">Máximo: R$550</div>
+      </div>
+    </div>
+
+    <!-- Coluna 3 -->
+    <div class="info">
+      <div class="info-icon">🎯</div>
+      <div>
+        <div class="info-label">APOSTAS ELEGÍVEIS</div>
+        <div class="info-text">Odds de 1.25 a 4.00</div>
+      </div>
+    </div>
+
+    <!-- Coluna 4 -->
+    <div class="info">
+      <div class="info-icon">⏰</div>
+      <div>
+        <div class="info-label">VALIDADE</div>
+        <div class="info-text">7 dias após o resgate</div>
+      </div>
+    </div>
+
+  </div>
+  <div class="ctas">
+    <a class="btn btn-red" href="https://r1wclcs.com/casino/list?open=register&p=7lri">ENTRE AQUI →</a>
+    <a class="btn btn-blue" href="https://t.me/jb1winganhos">ENTRE NO GRUPO DO TELEGRAM</a>
+  </div>
+</main>
+
+<script>
+/* Roleta */
+(function(){
+  const svg=document.getElementById('roulette'), NS='http://www.w3.org/2000/svg';
+  const nums=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
+  const el=(t,a)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e};
+  const defs=el('defs',{});
+  defs.innerHTML=`
+    <radialGradient id="rim" cx="0" cy="0" r="500" gradientUnits="userSpaceOnUse">
+      <stop offset=".86" stop-color="#2a0a0e"/><stop offset=".93" stop-color="#6a1420"/><stop offset="1" stop-color="#1a0508"/></radialGradient>
+    <radialGradient id="hub" cx="0" cy="0" r="170" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#7a1622"/><stop offset=".7" stop-color="#3a0a10"/><stop offset="1" stop-color="#16050a"/></radialGradient>`;
+  svg.appendChild(defs);
+  svg.appendChild(el('circle',{r:500,fill:'url(#rim)'}));
+  const R1=430,R2=330,n=nums.length,step=2*Math.PI/n;
+  nums.forEach((num,i)=>{
+    const a0=i*step-Math.PI/2-step/2,a1=a0+step;
+    const p=(r,a)=>`${(r*Math.cos(a)).toFixed(2)} ${(r*Math.sin(a)).toFixed(2)}`;
+    const fill=num===0?'#0e5a32':(i%2?'#140608':'#b0122a');
+    svg.appendChild(el('path',{d:`M${p(R2,a0)} L${p(R1,a0)} A${R1} ${R1} 0 0 1 ${p(R1,a1)} L${p(R2,a1)} A${R2} ${R2} 0 0 0 ${p(R2,a0)}Z`,fill,stroke:'#c79a55','stroke-width':1.2,'stroke-opacity':.5}));
+    const am=(a0+a1)/2, tr=395;
+    const t=el('text',{x:0,y:0,fill:'#f1d9a8','font-size':24,'font-family':'Playfair Display,serif','font-weight':700,'text-anchor':'middle','dominant-baseline':'middle',
+      transform:`translate(${(tr*Math.cos(am)).toFixed(1)} ${(tr*Math.sin(am)).toFixed(1)}) rotate(${(am*180/Math.PI+90).toFixed(1)})`});
+    t.textContent=num; svg.appendChild(t);
+  });
+  svg.appendChild(el('circle',{r:R2,fill:'#1e070b',stroke:'#c79a55','stroke-opacity':.4,'stroke-width':2}));
+  for(let i=0;i<36;i++){const a=i*Math.PI/18;svg.appendChild(el('line',{x1:200*Math.cos(a),y1:200*Math.sin(a),x2:325*Math.cos(a),y2:325*Math.sin(a),stroke:'#b0122a','stroke-opacity':.35,'stroke-width':6}))}
+  svg.appendChild(el('circle',{r:170,fill:'url(#hub)',stroke:'#c79a55','stroke-opacity':.5,'stroke-width':2}));
+  for(let i=0;i<4;i++){const a=i*Math.PI/2;svg.appendChild(el('line',{x1:0,y1:0,x2:150*Math.cos(a),y2:150*Math.sin(a),stroke:'#d6ad66','stroke-width':10,'stroke-linecap':'round'}))}
+  svg.appendChild(el('circle',{r:26,fill:'#d6ad66'}));
+  svg.appendChild(el('circle',{r:460,fill:'none',stroke:'#c79a55','stroke-opacity':.35,'stroke-width':1.5}));
+})();
+
+/* Fichas */
+document.querySelectorAll('svg[data-chip]').forEach(s=>{
+  const label=s.dataset.chip;
+  s.setAttribute('viewBox','0 0 100 100');
+  let notches='';
+  for(let i=0;i<8;i++){notches+=`<rect x="44" y="2" width="12" height="15" rx="2" fill="#efe1c8" transform="rotate(${i*45} 50 50)"/>`}
+  s.innerHTML=`
+    <defs><radialGradient id="cg${label}" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="#e2283f"/><stop offset="1" stop-color="#7a0816"/></radialGradient></defs>
+    <circle cx="50" cy="50" r="48" fill="url(#cg${label})"/>
+    ${notches}
+    <circle cx="50" cy="50" r="33" fill="#9a0c1e" stroke="#efe1c8" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="50" cy="50" r="27" fill="#b4132a"/>
+    ${label?`<text x="50" y="52" text-anchor="middle" dominant-baseline="middle" font-family="Playfair Display,serif" font-weight="800" font-size="${label.length>2?17:22}" fill="#f4e6cc" transform="rotate(-14 50 50)">${label}</text>`:''}`;
+});
+
+/* Dados 3D */
+const pipMap={1:[4],2:[0,8],3:[0,4,8],4:[0,2,6,8],5:[0,2,4,6,8],6:[0,2,3,5,6,8]};
+document.querySelectorAll('.die').forEach(d=>{
+  const s=+d.dataset.size;
+  d.style.width=d.style.height=s+'px';
+  const cube=document.createElement('div'); cube.className='cube';
+  cube.style.transform=`rotateX(${d.dataset.rx}deg) rotateY(${d.dataset.ry}deg) rotateZ(${d.dataset.rz}deg)`;
+  const tf=[`translateZ(${s/2}px)`,`rotateY(180deg) translateZ(${s/2}px)`,`rotateY(90deg) translateZ(${s/2}px)`,`rotateY(-90deg) translateZ(${s/2}px)`,`rotateX(90deg) translateZ(${s/2}px)`,`rotateX(-90deg) translateZ(${s/2}px)`];
+  [5,2,3,4,6,1].forEach((v,i)=>{
+    const f=document.createElement('div'); f.className='face'; f.style.transform=tf[i];
+    for(let c=0;c<9;c++){const cell=document.createElement('div'); if(pipMap[v].includes(c)) cell.className='pip'; f.appendChild(cell)}
+    cube.appendChild(f);
+  });
+  d.appendChild(cube);
+});
+</script>
+</body>
+</html>
